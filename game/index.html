@@ -3,17 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Block Dodger</title>
+<title>Solmar City — Open World</title>
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #11141b; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1026; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
   #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
-  /* Read aloud, never shown: the status line screen readers announce. */
+  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; color: #fff; }
+  #hud-tl { position: absolute; top: 14px; left: 16px; }
+  #health-row { display: flex; align-items: center; gap: 8px; }
+  #health-label { font-size: 11px; letter-spacing: 2px; font-weight: 700; text-shadow: 0 1px 3px #000; }
+  #health-bar { width: 190px; height: 12px; background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.5); border-radius: 6px; overflow: hidden; }
+  #health-fill { height: 100%; width: 100%; background: #37d67a; }
+  #money-row { margin-top: 6px; font-size: 22px; font-weight: 800; color: #7dff9e; text-shadow: 0 1px 4px #000; }
+  #stars-row { margin-top: 2px; font-size: 24px; color: #ffd166; text-shadow: 0 1px 4px #000; letter-spacing: 3px; }
+  #hud-tc { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); text-align: center; width: 46%; }
+  #objective { font-size: 16px; font-weight: 700; background: rgba(0,0,0,0.5); padding: 6px 14px; border-radius: 8px; display: inline-block; text-shadow: 0 1px 3px #000; }
+  #dialogue { margin-top: 8px; font-size: 15px; font-style: italic; background: rgba(0,0,0,0.45); padding: 5px 12px; border-radius: 8px; display: inline-block; opacity: 0; transition: opacity 0.3s; }
+  #hud-tr { position: absolute; top: 14px; right: 16px; text-align: right; }
+  #minimap { border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.35); background: #10141c; }
+  #clock { margin-top: 4px; font-size: 15px; font-weight: 700; text-shadow: 0 1px 3px #000; }
+  #hud-bl { position: absolute; bottom: 16px; left: 16px; font-size: 15px; font-weight: 700; text-shadow: 0 1px 3px #000; }
+  #hud-br { position: absolute; bottom: 14px; right: 18px; font-size: 26px; font-weight: 800; text-shadow: 0 1px 4px #000; }
+  #speed-unit { font-size: 13px; font-weight: 600; }
+  #hud-bc { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-size: 15px; font-weight: 600; background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 8px; }
+  #toast { position: absolute; top: 38%; left: 50%; transform: translateX(-50%); font-size: 22px; font-weight: 800; color: #ffd166; text-shadow: 0 2px 6px #000; opacity: 0; transition: opacity 0.3s; text-align: center; }
+  #damage-flash { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(255,0,0,0.55) 100%); opacity: 0; pointer-events: none; }
+  .screen { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(5,8,20,0.72); pointer-events: auto; }
+  .hidden { display: none !important; }
+  .panel { background: rgba(10,14,28,0.92); border: 1px solid rgba(255,255,255,0.18); border-radius: 16px; padding: 34px 44px; text-align: center; max-width: 560px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+  .panel h1 { margin: 0 0 6px; font-size: 52px; letter-spacing: 6px; color: #ffd166; text-shadow: 0 3px 0 #b45309, 0 6px 18px rgba(0,0,0,0.7); }
+  .tagline { color: #cbd5e1; font-size: 15px; margin: 0 0 22px; }
+  .btn-row { display: flex; gap: 12px; justify-content: center; margin: 10px 0; }
+  button { pointer-events: auto; cursor: pointer; background: #f2c230; color: #1a1206; border: none; border-radius: 10px; padding: 12px 22px; font-size: 15px; font-weight: 800; letter-spacing: 1px; }
+  button:hover { background: #ffd94d; }
+  #howto { text-align: left; color: #e2e8f0; font-size: 14px; margin-top: 14px; background: rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 10px; }
+  #howto p { margin: 6px 0; }
+  .foot { color: #64748b; font-size: 12px; margin-top: 18px; }
   #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Block Dodger: move the paddle left and right to dodge falling blocks and catch coins"></canvas>
+<canvas id="game" aria-label="Solmar City: an open-world crime game. Drive, run missions and outrun the police."></canvas>
+<div id="hud"></div>
 <p id="status" role="status" aria-live="polite"></p>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js" } }
+</script>
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>
